@@ -12,17 +12,15 @@ class Brik < Formula
 
   def install
     prefix.install Dir["*"]
-    # Replace bin/brik with a shim that sets BRIK_HOME to the Homebrew prefix
+    # The real CLI script is now at #{prefix}/bin/brik.
+    # Rename it so the shim can call it without recursion.
+    mv prefix/"bin"/"brik", prefix/"bin"/"brik-cli"
     (bin/"brik").unlink if (bin/"brik").exist?
     (bin/"brik").write <<~EOS
       #!/usr/bin/env bash
       BRIK_HOME="${BRIK_HOME:-#{prefix}}"
       export BRIK_HOME
-      if [ ! -f "${BRIK_HOME}/bin/brik" ]; then
-          printf 'brik: runtime not found at %s\\n' "${BRIK_HOME}" >&2
-          exit 1
-      fi
-      exec "${BRIK_HOME}/bin/brik" "$@"
+      exec "${BRIK_HOME}/bin/brik-cli" "$@"
     EOS
   end
 
