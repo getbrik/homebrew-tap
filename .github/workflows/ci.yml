@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Formula/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Formula/**'
+      - '.github/workflows/ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: brew audit + style
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@6eaeff80e7e5c43087c0e5eb5aa82120399e9c91
+
+      - name: Configure tap symlink
+        run: |
+          tap_dir=$(brew --repository)/Library/Taps/getbrik/homebrew-tap
+          mkdir -p "$(dirname "$tap_dir")"
+          ln -s "$GITHUB_WORKSPACE" "$tap_dir"
+
+      - name: brew style
+        run: brew style getbrik/tap
+
+      - name: brew audit
+        run: brew audit --strict --online --tap=getbrik/tap
