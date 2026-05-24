@@ -2,13 +2,13 @@ class Brik < Formula
   desc "Portable CI/CD pipeline system"
   homepage "https://github.com/getbrik/brik"
   url "https://github.com/getbrik/brik.git",
-      tag:      "v0.6.0"
+      tag: "v0.6.0"
   license "MPL-2.0"
   head "https://github.com/getbrik/brik.git", branch: "main"
 
   depends_on "bash"
-  depends_on "yq"
   depends_on "jq"
+  depends_on "yq"
 
   def install
     prefix.install Dir["*"]
