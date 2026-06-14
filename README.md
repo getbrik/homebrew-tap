@@ -1,67 +1,110 @@
 <p align="center">
-  <img src="docs/homebrew-brik.jpg" alt="Homebrew Tap for Brik">
+  <img src="docs/homebrew-brik.jpg" alt="Homebrew tap for Brik">
 </p>
 
 <p align="center">
   <b>Install Brik with one brew command.</b><br>
-  Official Homebrew tap. macOS + Linux. Auto-updated to every Brik release.
+  The official Homebrew tap. macOS and Linux, auto-bumped to every Brik release.<br>
+  <i>Run your pipeline before you push.</i>
 </p>
 
 <p align="center">
   <a href="https://github.com/getbrik/homebrew-tap/actions/workflows/ci.yml"><img src="https://github.com/getbrik/homebrew-tap/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/getbrik/brik/releases"><img src="https://img.shields.io/github/v/release/getbrik/brik?label=brik" alt="brik version"></a>
-  <a href="#installation"><img src="https://img.shields.io/badge/platforms-macOS%20%7C%20Linux-lightgrey" alt="Platforms"></a>
+  <a href="https://github.com/getbrik/brik/releases"><img src="https://img.shields.io/github/v/release/getbrik/brik?label=brik" alt="Brik release"></a>
+  <a href="#install"><img src="https://img.shields.io/badge/platforms-macOS%20%7C%20Linux-lightgrey" alt="Platforms"></a>
   <a href="https://github.com/getbrik/brik/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MPL--2.0-blue" alt="License"></a>
 </p>
 
-This is the official Homebrew tap for [Brik](https://github.com/getbrik/brik), the portable CI/CD pipeline system.
+<p align="center">
+  <a href="https://github.com/getbrik/brik#readme">Brik</a> -
+  <a href="https://github.com/getbrik/brik/blob/main/docs/README.md">Documentation</a> -
+  <a href="https://github.com/getbrik/homebrew-tap/issues">Issues</a>
+</p>
 
-`brew install brik` puts the `brik` CLI on your local machine -- macOS or Linux. The same Bash code path runs locally and inside your CI (GitLab, Jenkins, GitHub Actions), so a local run reproduces what your pipeline does. Once installed you can:
+---
 
-- scaffold a new project (`brik init`)
-- validate a `brik.yml` against the schema (`brik validate`)
-- check that your environment has the prerequisites (`brik doctor`)
-- run any stage or the full pipeline locally (`brik run stage <name>` / `brik run pipeline`)
-- inspect what the platform-aware planner would execute for the current commit (`brik plan --explain`)
+## What this tap is
 
-For the project itself -- the architecture, the fixed flow, the supported stacks, the platform shared libraries -- see the [main Brik repository](https://github.com/getbrik/brik).
+This is the official Homebrew tap for [Brik](https://github.com/getbrik/brik), the
+portable CI/CD pipeline system. It exists for one job: get the `brik` CLI onto your
+machine, on macOS or Linux, with a single command and the right prerequisites
+(`bash 5+`, `yq`, `jq`) already in place.
 
-## What's in the tap
+The point of installing it locally is reproducibility. Brik is the same Bash code
+path everywhere, so a `brik` run on your laptop executes what your pipeline executes
+on GitLab, Jenkins, or GitHub Actions. You catch a broken build at your desk, not in
+CI. Once installed you can:
 
-| Formula | Description | Pinned to | Brings in |
-|---------|-------------|-----------|-----------|
-| `brik` | Portable CI/CD pipeline system | [brik latest release](https://github.com/getbrik/brik/releases) | bash, yq, jq |
+- scaffold a new project: `brik init`
+- validate a `brik.yml` against the schema: `brik validate`
+- check the host has the prerequisites: `brik doctor`
+- run a single stage or the full CI flow locally: `brik stage <name>` / `brik integrate`
+- inspect what the platform-aware planner would run for the current commit: `brik plan --explain`
 
-## Installation
+> [!NOTE]
+> This repository ships the formula only. For what Brik is, the fixed flows, the
+> supported stacks, and the platform adapters, see the
+> [main Brik repository](https://github.com/getbrik/brik).
+
+## Install
+
+```bash
+brew install getbrik/tap/brik
+```
+
+Or tap first, then install (handy if you plan to add more `getbrik` formulae later):
 
 ```bash
 brew tap getbrik/tap
 brew install brik
 ```
 
-Or install directly:
+### Latest development version
+
+To track the unreleased `main` branch instead of the latest tagged release, install
+from `--HEAD`:
 
 ```bash
-brew install getbrik/tap/brik
+brew install --HEAD getbrik/tap/brik
 ```
+
+> [!TIP]
+> A `--HEAD` install pins to the commit it was built from. To pull newer commits
+> later, refresh it with `brew upgrade --fetch-HEAD brik` (plain `brew upgrade`
+> leaves HEAD installs untouched). Switch back to stable any time with
+> `brew install brik` (or `brew reinstall brik`).
+
+## What's in the tap
+
+| Formula | Tracks | Pulls in | License |
+|---------|--------|----------|---------|
+| `brik` | the [latest Brik release](https://github.com/getbrik/brik/releases) | `bash`, `yq`, `jq` | MPL-2.0 |
+
+The formula installs the Brik runtime under the Homebrew prefix and puts a thin
+`brik` shim on your `PATH`, so `BRIK_HOME` is wired up for you and the CLI resolves
+its libraries without any extra setup.
 
 ## Verify the install
 
 ```bash
-brik doctor      # checks bash 5+, yq, jq, jv, and stack tools
 brik version     # prints the installed Brik version
+brik doctor      # checks bash 5+, yq, jq, jv, and the stack toolchains
 ```
 
 ## Next steps
 
-Once installed, jump straight into the Brik repository for what to do next:
+Everything after install lives in the Brik repository:
 
-- [Getting Started -- Local CLI](https://github.com/getbrik/brik/blob/main/docs/getting-started/local.md) -- run a Brik pipeline on your laptop
-- [Getting Started -- GitLab CI](https://github.com/getbrik/brik/blob/main/docs/getting-started/gitlab.md) and [Jenkins](https://github.com/getbrik/brik/blob/main/docs/getting-started/jenkins.md) -- wire Brik into your CI platform
-- [Configuration reference](https://github.com/getbrik/brik/blob/main/docs/configuration/overview.md) -- the full `brik.yml` schema
-- [Examples](https://github.com/getbrik/brik/tree/main/examples) -- working `brik.yml` files for Node, Java, Python, .NET
-- [The Brik README](https://github.com/getbrik/brik#readme) -- what Brik is, the four-layer architecture, and why it exists
-- [Full documentation index](https://github.com/getbrik/brik/blob/main/docs/README.md)
+| You use | Start here |
+|---------|------------|
+| Local CLI | [Getting started - Local](https://github.com/getbrik/brik/blob/main/docs/getting-started/local.md) |
+| GitLab CI | [Getting started - GitLab](https://github.com/getbrik/brik/blob/main/docs/getting-started/gitlab.md) |
+| Jenkins | [Getting started - Jenkins](https://github.com/getbrik/brik/blob/main/docs/getting-started/jenkins.md) |
+
+- [Configuration reference](https://github.com/getbrik/brik/blob/main/docs/reference/configuration/README.md) - the full `brik.yml` schema, one page per section
+- [Examples](https://github.com/getbrik/brik/tree/main/examples) - working `brik.yml` files for Node, Java, Python, and .NET
+- [The Brik README](https://github.com/getbrik/brik#readme) - what Brik is, the two fixed flows, and why it exists
+- [Documentation index](https://github.com/getbrik/brik/blob/main/docs/README.md)
 
 ## Upgrade
 
@@ -69,15 +112,23 @@ Once installed, jump straight into the Brik repository for what to do next:
 brew update && brew upgrade brik
 ```
 
-Each new [Brik release](https://github.com/getbrik/brik/releases) ships with a matching formula bump in this tap. Run `brew update` regularly to stay current.
+Every new [Brik release](https://github.com/getbrik/brik/releases) ships with a
+matching formula bump in this tap. Run `brew update` regularly to stay current.
 
 ## Uninstall
 
 ```bash
 brew uninstall brik
-brew untap getbrik/tap  # optional: remove the tap
+brew untap getbrik/tap   # optional: remove the tap
 ```
+
+## Related projects
+
+- [brik](https://github.com/getbrik/brik) - the portable CI/CD pipeline system this tap installs.
+- [brik-images](https://github.com/getbrik/brik-images) - official Docker images for Brik runners. Multi-arch, signed, scanned, rebuilt weekly.
+- [briklab](https://github.com/getbrik/briklab) - local Docker infrastructure for testing Brik pipelines against real GitLab and Jenkins.
 
 ## License
 
-[MPL-2.0](https://github.com/getbrik/brik/blob/main/LICENSE) -- inherited from the [Brik project](https://github.com/getbrik/brik).
+[MPL-2.0](https://github.com/getbrik/brik/blob/main/LICENSE), inherited from the
+[Brik project](https://github.com/getbrik/brik).
