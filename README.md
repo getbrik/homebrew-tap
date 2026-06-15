@@ -74,6 +74,28 @@ brew install --HEAD getbrik/tap/brik
 > leaves HEAD installs untouched). Switch back to stable any time with
 > `brew install brik` (or `brew reinstall brik`).
 
+#### Running an unmerged feature branch
+
+To exercise a branch that is not yet on `main`, clone the Brik repo, check the
+branch out, and alias `brik` to the checkout. `bin/brik` resolves `BRIK_HOME`
+from its own location, so no build or install step is needed:
+
+```bash
+git clone https://github.com/getbrik/brik.git
+cd brik
+git checkout <branch-name>
+alias brik="$(pwd)/bin/brik"   # add to your shell profile to persist
+brik version
+```
+
+The alias always reflects whatever branch is currently checked out, so editing
+the branch takes effect immediately with no reinstall. Drop the alias (or open a
+new shell) to fall back to your Homebrew-installed `brik`.
+
+> [!NOTE]
+> If a Homebrew `brik` is on your `PATH` ahead of the alias, the alias still wins
+> in interactive shells. Run `which brik` to confirm which one resolves.
+
 ## What's in the tap
 
 | Formula | Tracks | Pulls in | License |
